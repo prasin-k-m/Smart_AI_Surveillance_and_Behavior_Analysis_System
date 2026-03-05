@@ -27,18 +27,11 @@ This project integrates **YOLO object detection, MediaPipe pose estimation, and 
 
 <img width="1625" height="1683" alt="mermaid-diagram" src="https://github.com/user-attachments/assets/f7be43a1-0170-4451-953b-e62975e4d953" />
 
+## **Technologies Used**
 
-⚙️ Technologies Used
-Technology	Purpose
-Python	Core Programming Language
-YOLOv8	Object Detection
-MediaPipe	Pose Estimation
-Face Recognition	Identity Verification
-OpenCV	Video Processing
-Streamlit	Monitoring Dashboard
-Flask	Alert API Server
-NumPy	Numerical Computation
-🗂 Project Structure
+<img width="1625" height="1683" alt="mermaid-diagram" src="https://github.com/user-attachments/assets/00f21a44-d02f-4b06-bb64-5a47d4fe5747" />
+
+## **Project Structure**
 Smart_AI_Surveillance_System/
 
 api/
