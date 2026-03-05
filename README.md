@@ -33,77 +33,41 @@ This project integrates **YOLO object detection, MediaPipe pose estimation, and 
 
 ## **Project Structure**
 Smart_AI_Surveillance_System/
-
 │
-
 ├── api/
-
 │   └── alert_server.py
-
 │
-
 ├── dashboard/
-
 │   └── dashboard.py
-
 │
-
 ├── modules/
-
 │   ├── detection.py
-
 │   ├── pose_analysis.py
-
 │   ├── face_recognition_module.py
-
 │   ├── risk_engine.py
-
 │   └── logger.py
-
 │
-
 ├── models/
-
 │   ├── weapon_model.pt
-
 │   └── yolov8n-face.pt
-
 │
-
 ├── known_faces/
-
 │   ├── john.jpg
-
 │   └── alice.jpg
-
 │
-
 ├── testing_samples/
-
 │   └── sample_video.mp4
-
 │
-
 ├── Output_samples/
-
 │   └── demo_surveillance.mp4
-
 │
-
 ├── incidents/
-
 │   └── captured_alert_images/
-
 │
-
 ├── main.py
-
 ├── requirements.txt
-
 ├── weapon.yaml
-
 ├── event_log.csv
-
 └── README.md
 
 🔍 AI Models Used
