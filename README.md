@@ -1,5 +1,9 @@
 # **Smart AI Surveillance & Behavior Analysis System**
 
+### **Project Status:** Active Development
+
+This system is currently under development. New features and optimizations are being added continuously.
+
 An AI-powered intelligent surveillance system that detects weapons, analyzes human behavior, identifies individuals, and assesses threat levels in real time using computer vision and deep learning.
 
 This project integrates YOLO object detection, MediaPipe pose estimation, and face recognition into a unified pipeline capable of generating real-time alerts, risk assessments, and incident logs.
