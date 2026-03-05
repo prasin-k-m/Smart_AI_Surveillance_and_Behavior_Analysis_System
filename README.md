@@ -127,31 +127,32 @@ Alerts are triggered when risk level reaches **HIGH or CRITICAL**.
 ## **Event Logging**
 
 Every alert is recorded with a timestamp:
-
+```
 Timestamp | TrackID | Name | Posture | Armed | RiskLevel
-
+```
 Example log:
-
+```
 2026-03-04 12:31:22 | ID 3 | Unknown | HANDS UP | True | CRITICAL
-
+```
 Logs are stored in:
-
+```
 event_log.csv
-📸 Incident Capture
+```
+## **Incident Capture**
 
 When a high-risk event occurs, the system automatically stores a snapshot:
-
+```
 incidents/
    incident_3_20260304_123122.jpg
-
+```
 These images can be reviewed by security personnel.
 
-📡 Alert API
+## **Alert API**
 
 The system can send alerts to an external monitoring server.
 
 Example API payload:
-
+```
 {
   "track_id": 3,
   "name": "Unknown",
@@ -159,113 +160,121 @@ Example API payload:
   "armed": true,
   "risk": "CRITICAL"
 }
-🖥 Dashboard
+```
+## **Dashboard**
 
-A Streamlit dashboard provides real-time monitoring:
+A **Streamlit dashboard** provides real-time monitoring:
 
 Displays:
 
-Recent alerts
+   - Recent alerts
 
-Event logs
+   - Event logs
 
-Captured incidents
+   - Captured incidents
 
-System activity
+   - System activity
 
 Run dashboard:
-
+```
 streamlit run dashboard/dashboard.py
-📦 Installation
+```
+
+## **Installation**
 
 Clone repository:
-
+```
 git clone https://github.com/yourusername/Smart_AI_Surveillance_System.git
 cd Smart_AI_Surveillance_System
+```
 
 Install dependencies:
-
+```
 pip install -r requirements.txt
-▶️ Run the System
+```
+
+## **Run the System**
 
 Run the surveillance pipeline:
-
+```
 python main.py
-
+```
 Run alert server:
-
+```
 python api/alert_server.py
-
+```
 Run dashboard:
-
+```
 streamlit run dashboard/dashboard.py
-📷 Example Results
+```
+
+## **Example Results**
 
 Input Video:
-
+```
 testing_samples/sample_video.mp4
-
+```
 Output Detection:
-
+```
 Output_samples/demo_surveillance.mp4
-
+```
 Detected events:
 
-Weapon detected
+- Weapon detected
 
-Person identified
+- Person identified
 
-Risk level evaluated
+- Risk level evaluated
 
-Alert triggered
+- Alert triggered
 
-🎯 Applications
+## **Applications**
 
 This system can be applied in:
 
-Airports
+- Airports
 
-Railway stations
+- Railway stations
 
-Shopping malls
+- Shopping malls
 
-Public events
+- Public events
 
 Smart city surveillance
 
-Security monitoring centers
+- Security monitoring centers
 
-🔒 Ethical Considerations
+## **Ethical Considerations**
 
-This system is intended for research and security assistance only.
+This system is intended for **research and security assistance only**.
 
 Deployment must comply with:
 
-Local privacy regulations
+- Local privacy regulations
 
-Data protection laws
+- Data protection laws
 
-Ethical AI practices
+- Ethical AI practices
 
 Human oversight is required before taking real-world actions.
 
-👨‍💻 Author
+## **Author**
 
-Prasin K M
+**Prasin K M**
 Data Science Intern | AI & Computer Vision Enthusiast
 
-⭐ Future Improvements
+## **Future Improvements**
 
-Multi-camera surveillance support
+- Multi-camera surveillance support
 
-Edge deployment with GPU acceleration
+- Edge deployment with GPU acceleration
 
-Crowd behavior analysis
+- Crowd behavior analysis
 
-Real-time threat heatmaps
+- Real-time threat heatmaps
 
-Cloud-based alert system
+- Cloud-based alert system
 
-⭐ If you found this project useful
+## **If you found this project useful**
 
-Please consider starring the repository.
+Please consider **starring the repository**.
