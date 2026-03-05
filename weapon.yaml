@@ -1,0 +1,9 @@
+path: C:/Users/user/Desktop/ML_PROJECT/Smart_AI_Surveillance_and_Behavior_Analysis_System/dataset
+
+train: images/train
+val: images/val
+
+nc: 2
+names:
+  0: knife
+  1: gun

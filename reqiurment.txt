@@ -1,0 +1,15 @@
+dlib @ file:///C:/Users/user/Desktop/ML_PROJECT/Smart_AI_Surveillance_and_Behavior_Analysis_System/dlib-19.22.99-cp39-cp39-win_amd64.whl#sha256=0fd828405c77af2df1ff6a09964a8ba7f14838c538d9017046804f353e9b4bc2
+
+face-recognition==1.3.0
+
+face_recognition_models==0.3.0
+
+matplotlib==3.9.4
+
+mediapipe==0.10.9
+
+numpy==1.24.4
+
+opencv-python==4.8.1.78
+
+ultralytics==8.0.196
