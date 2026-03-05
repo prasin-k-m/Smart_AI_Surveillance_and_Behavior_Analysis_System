@@ -73,12 +73,13 @@ Smart_AI_Surveillance_System/
 ├── event_log.csv
 └── README.md
 ```
-🔍 AI Models Used
-1️⃣ Person Detection
+## **AI Models Used**
 
-Pretrained YOLOv8 model used to detect and track people.
+#### 1.Person Detection
 
-2️⃣ Weapon Detection
+Pretrained **YOLOv8 model** used to detect and track people.
+
+#### 2.Weapon Detection
 
 Custom YOLO model trained on a dataset containing:
 
@@ -86,11 +87,9 @@ Guns
 
 Knives
 
-Non-weapon objects
+Training performed using **Ultralytics YOLOv8 framework**.
 
-Training performed using Ultralytics YOLOv8 framework.
-
-3️⃣ Pose Detection
+#### 3.Pose Detection
 
 MediaPipe Pose is used to detect posture states:
 
@@ -100,19 +99,20 @@ Hands Raised
 
 Fallen Person
 
-4️⃣ Face Recognition
+#### 4.Face Recognition
 
-Face embeddings are extracted and matched against a known identity database.
+Face embeddings are extracted and matched against a **known identity database**.
 
-⚠️ Risk Assessment Logic
+## **Risk Assessment Logic**
 
 The system computes a risk score using multiple signals.
 
-Condition	Risk Points
-Weapon detected	+5
-Unknown person	+2
-Hands raised	+3
-Fallen posture	+2
+| Condition       | Risk Points |
+| --------------- | ----------- |
+| Weapon detected | +5          |
+| Unknown person  | +2          |
+| Hands raised    | +3          |
+| Fallen posture  | +2          |
 
 Risk levels:
 
@@ -121,9 +121,9 @@ Risk levels:
 5–7   → HIGH
 8+    → CRITICAL
 
-Alerts are triggered when risk level reaches HIGH or CRITICAL.
+Alerts are triggered when risk level reaches **HIGH or CRITICAL**.
 
-📊 Event Logging
+## **Event Logging**
 
 Every alert is recorded with a timestamp:
 
