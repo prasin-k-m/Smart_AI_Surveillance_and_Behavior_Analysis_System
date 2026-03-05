@@ -24,7 +24,6 @@ This project integrates **YOLO object detection, MediaPipe pose estimation, and 
 - **Modular Architecture for Production Deployment**
 
 ## **System Architecture**
-
 <img width="1625" height="1683" alt="mermaid-diagram" src="https://github.com/user-attachments/assets/03bc883b-c07a-43b5-b26a-3d4c65911cef" /
 
 ⚙️ Technologies Used
