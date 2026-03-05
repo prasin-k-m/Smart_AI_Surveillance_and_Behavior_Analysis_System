@@ -83,9 +83,9 @@ Pretrained **YOLOv8 model** used to detect and track people.
 
 Custom YOLO model trained on a dataset containing:
 
-Guns
+   - Guns
 
-Knives
+   - Knives
 
 Training performed using **Ultralytics YOLOv8 framework**.
 
@@ -93,11 +93,11 @@ Training performed using **Ultralytics YOLOv8 framework**.
 
 MediaPipe Pose is used to detect posture states:
 
-Standing
+   - Standing
 
-Hands Raised
+   - Hands Raised
 
-Fallen Person
+   - Fallen Person
 
 #### 4.Face Recognition
 
@@ -115,11 +115,12 @@ The system computes a risk score using multiple signals.
 | Fallen posture  | +2          |
 
 Risk levels:
-
+```
 0–2   → LOW
 3–4   → MEDIUM
 5–7   → HIGH
 8+    → CRITICAL
+```
 
 Alerts are triggered when risk level reaches **HIGH or CRITICAL**.
 
