@@ -8,7 +8,7 @@ An **AI-powered intelligent surveillance system** that detects **weapons, analyz
 
 This project integrates **YOLO object detection, MediaPipe pose estimation, and face recognition** into a unified pipeline capable of generating **real-time alerts, risk assessments, and incident logs**.
 
-##**Key Features**
+## **Key Features**
 
 - Person Detection & Tracking (YOLOv8)
 - Custom Weapon Detection Model (Gun / Knife detection)
