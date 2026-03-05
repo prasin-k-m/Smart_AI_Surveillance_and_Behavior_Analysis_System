@@ -1,4 +1,4 @@
-#**Smart AI Surveillance & Behavior Analysis System**
+# **Smart AI Surveillance & Behavior Analysis System**
 
 An AI-powered intelligent surveillance system that detects weapons, analyzes human behavior, identifies individuals, and assesses threat levels in real time using computer vision and deep learning.
 
