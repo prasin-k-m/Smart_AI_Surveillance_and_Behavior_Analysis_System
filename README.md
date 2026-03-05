@@ -4,24 +4,24 @@
 
 This system is currently under development. New features and optimizations are being added continuously.
 
-An AI-powered intelligent surveillance system that detects weapons, analyzes human behavior, identifies individuals, and assesses threat levels in real time using computer vision and deep learning.
+An **AI-powered intelligent surveillance system** that detects **weapons, analyzes human behavior, identifies individuals, and assesses threat levels in real time** using computer vision and deep learning.
 
-This project integrates YOLO object detection, MediaPipe pose estimation, and face recognition into a unified pipeline capable of generating real-time alerts, risk assessments, and incident logs.
+This project integrates **YOLO object detection, MediaPipe pose estimation, and face recognition** into a unified pipeline capable of generating **real-time alerts, risk assessments, and incident logs**.
 
-🚀 Key Features
+##**Key Features**
 
-✔ Person Detection & Tracking (YOLOv8)
-✔ Custom Weapon Detection Model (Gun / Knife detection)
-✔ Human Behavior Analysis using MediaPipe Pose
-✔ Face Recognition for Identity Verification
-✔ Risk Scoring Engine (Low → Critical)
-✔ Real-time Alert System
-✔ Incident Snapshot Capture
-✔ Event Logging with Timestamp
-✔ Security Monitoring Dashboard
-✔ Modular Architecture for Production Deployment
+- Person Detection & Tracking (YOLOv8)
+- Custom Weapon Detection Model (Gun / Knife detection)
+- Human Behavior Analysis using MediaPipe Pose
+- Face Recognition for Identity Verification
+- Risk Scoring Engine (Low → Critical)
+- Real-time Alert System
+- Incident Snapshot Capture
+- Event Logging with Timestamp
+- Security Monitoring Dashboard
+- Modular Architecture for Production Deployment
 
-🧠 System Architecture
+## **System Architecture**
 Video Input
      │
      ▼
