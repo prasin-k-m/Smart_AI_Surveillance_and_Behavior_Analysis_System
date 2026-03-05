@@ -10,18 +10,21 @@ This project integrates **YOLO object detection, MediaPipe pose estimation, and 
 
 ## **Key Features**
 
-- Person Detection & Tracking (YOLOv8)
-- Custom Weapon Detection Model (Gun / Knife detection)
-- Human Behavior Analysis using MediaPipe Pose
-- Face Recognition for Identity Verification
-- Risk Scoring Engine (Low → Critical)
-- Real-time Alert System
-- Incident Snapshot Capture
-- Event Logging with Timestamp
-- Security Monitoring Dashboard
-- Modular Architecture for Production Deployment
+- **Person Detection & Tracking** (YOLOv8)
+- **Custom Weapon Detection Model** (Gun / Knife detection)
+- **Human Behavior Analysis** using MediaPipe Pose
+- **Face Recognition for Identity Verification**
+- **Risk Scoring Engine** (Low → Critical)
+- **Real-time Alert System**
+- **Incident Snapshot Capture**
+- **Event Logging with Timestamp**
+- **Security Monitoring Dashboard**
+- **Modular Architecture for Production Deployment**
 
 ## **System Architecture**
+
+<img width="1625" height="1683" alt="mermaid-diagram" src="https://github.com/user-attachments/assets/03bc883b-c07a-43b5-b26a-3d4c65911cef" />
+
 Video Input
      │
      ▼
@@ -44,6 +47,7 @@ Alert + Event Logger
      │
      ▼
 Security Dashboard / API
+
 ⚙️ Technologies Used
 Technology	Purpose
 Python	Core Programming Language
