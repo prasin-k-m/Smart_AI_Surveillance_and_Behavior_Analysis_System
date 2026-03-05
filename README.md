@@ -32,6 +32,9 @@ This project integrates **YOLO object detection, MediaPipe pose estimation, and 
 <img width="1625" height="1683" alt="mermaid-diagram" src="https://github.com/user-attachments/assets/00f21a44-d02f-4b06-bb64-5a47d4fe5747" />
 
 ## **Project Structure**
+## Project Structure
+
+```
 Smart_AI_Surveillance_System/
 │
 ├── api/
@@ -69,7 +72,7 @@ Smart_AI_Surveillance_System/
 ├── weapon.yaml
 ├── event_log.csv
 └── README.md
-
+```
 🔍 AI Models Used
 1️⃣ Person Detection
 
