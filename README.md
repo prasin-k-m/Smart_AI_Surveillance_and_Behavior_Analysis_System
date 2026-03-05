@@ -240,7 +240,7 @@ This system can be applied in:
 
 - Public events
 
-Smart city surveillance
+- Smart city surveillance
 
 - Security monitoring centers
 
@@ -261,6 +261,7 @@ Human oversight is required before taking real-world actions.
 ## **Author**
 
 **Prasin K M**
+
 Data Science Intern | AI & Computer Vision Enthusiast
 
 ## **Future Improvements**
