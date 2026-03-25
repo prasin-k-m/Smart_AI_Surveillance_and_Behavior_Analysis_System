@@ -14,3 +14,7 @@ runs
 # delib
 
 *.whl
+
+__init.py
+*pyc
+__pycache__
