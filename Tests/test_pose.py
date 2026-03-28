@@ -1,182 +1,184 @@
 import cv2
 import os
-import mediapipe as mp
+
 from app.detection.yolo_person import PersonDetector
 from app.pose.pose import PoseDetector, detect_posture
 
-# ------------------ CONFIG ------------------
+# ---------------- CONFIG ----------------
 PERSON_MODEL = "models/yolov8s.pt"
 
 IMAGE_FOLDER = "Sample_data/Pose/Images"
 VIDEO_FOLDER = "Sample_data/Pose/Video"
+
 OUTPUT_FOLDER = "Outputs/pose_result"
 
-DEBUG = True
+# ---------------- INIT ----------------
+person_detector = PersonDetector(PERSON_MODEL)
+pose_detector = PoseDetector()
 
-IMAGE_EXT = (".jpg", ".jpeg", ".png", ".bmp", ".webp")
-VIDEO_EXT = (".mp4", ".avi", ".mov", ".mkv")
-
-# ------------------ SETUP ------------------
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-person_detector = PersonDetector(PERSON_MODEL)
-mp_draw = mp.solutions.drawing_utils
+print("\n🚀 Running Pose Detection (MULTI FILE SUPPORT)\n")
 
-print("\n🚀 Pose Detection Started...\n")
 
-# ================== IMAGE ==================
-image_files = [f for f in os.listdir(IMAGE_FOLDER) if f.lower().endswith(IMAGE_EXT)]
-print(f"🖼️ Total Images Found: {len(image_files)}\n")
+# ---------- DRAW LABEL ----------
+def draw_label(frame, text, x1, y1, color):
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    font_scale = 0.7
+    thickness = 2
 
-for idx, img_file in enumerate(image_files):
+    (text_w, text_h), _ = cv2.getTextSize(text, font, font_scale, thickness)
 
-    try:
-        img_path = os.path.join(IMAGE_FOLDER, img_file)
-        print(f"➡️ Processing Image [{idx+1}/{len(image_files)}]: {img_file}")
+    if y1 - 10 > text_h:
+        text_x = x1
+        text_y = y1 - 10
+    else:
+        text_x = x1 + 5
+        text_y = y1 + text_h + 5
 
-        frame = cv2.imread(img_path)
+    cv2.rectangle(frame,
+                  (text_x - 2, text_y - text_h - 2),
+                  (text_x + text_w + 2, text_y + 2),
+                  color, -1)
 
-        if frame is None:
-            print(f"⚠️ Cannot read image: {img_file}")
-            continue
+    cv2.putText(frame, text, (text_x, text_y),
+                font, font_scale, (255, 255, 255), thickness)
 
-        persons = person_detector.detect(frame)
 
-        for person in persons:
-            x1, y1, x2, y2 = map(int, person["bbox"])
+# ================= IMAGE =================
+image_files = [f for f in os.listdir(IMAGE_FOLDER)
+               if f.lower().endswith((".jpg", ".jpeg", ".png"))]
 
-            x1, y1 = max(0, x1), max(0, y1)
-            x2, y2 = min(frame.shape[1], x2), min(frame.shape[0], y2)
+print(f"📸 Total Images Found: {len(image_files)}")
 
-            crop = frame[y1:y2, x1:x2]
-            if crop.size == 0:
-                continue
+for file in image_files:
 
-            crop = cv2.resize(crop, (256, 256))
+    path = os.path.join(IMAGE_FOLDER, file)
+    frame = cv2.imread(path)
 
-            # 🔥 NEW PoseDetector per person
-            pose_detector = PoseDetector()
-            results = pose_detector.process(crop)
+    if frame is None:
+        continue
 
-            posture = "UNKNOWN"
+    print(f"🖼️ Processing Image: {file}")
+
+    persons = person_detector.detect(frame)
+
+    for p in persons:
+        x1, y1, x2, y2 = map(int, p["bbox"])
+
+        pad = 20
+        x1 = max(0, x1 - pad)
+        y1 = max(0, y1 - pad)
+        x2 = min(frame.shape[1], x2 + pad)
+        y2 = min(frame.shape[0], y2 + pad)
+
+        person_crop = frame[y1:y2, x1:x2]
+
+        posture = "STANDING"
+
+        if person_crop.size != 0:
+            results = pose_detector.process(person_crop)
 
             if results and results.pose_landmarks:
                 posture = detect_posture(
                     results.pose_landmarks,
-                    crop.shape[0],
-                    crop.shape[1]
+                    person_crop.shape[0],
+                    person_crop.shape[1]
                 )
 
-                mp_draw.draw_landmarks(
-                    crop,
-                    results.pose_landmarks,
-                    pose_detector.mp_pose.POSE_CONNECTIONS
-                )
+        color = (0, 255, 0) if posture == "STANDING" else (0, 0, 255)
 
-            crop_back = cv2.resize(crop, (x2 - x1, y2 - y1))
-            frame[y1:y2, x1:x2] = crop_back
+        cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
+        draw_label(frame, posture, x1, y1, color)
 
-            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            cv2.putText(frame, posture, (x1, y1 - 10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
+    # SAVE IMAGE
+    output_path = os.path.join(OUTPUT_FOLDER, f"output_{file}")
+    cv2.imwrite(output_path, frame)
 
-        cv2.imwrite(os.path.join(OUTPUT_FOLDER, f"img_{img_file}"), frame)
+    # SHOW IMAGE
+    cv2.imshow("Image Pose", frame)
 
-        if DEBUG:
-            cv2.imshow("Pose Image", frame)
-            if cv2.waitKey(500) == 27:
-                break
+    key = cv2.waitKey(0)
 
-    except Exception as e:
-        print(f"❌ Error processing {img_file}: {e}")
+    # ESC → skip this image, continue next
+    if key == 27:
+        continue
 
 cv2.destroyAllWindows()
 
-# ================== VIDEO ==================
-video_files = [f for f in os.listdir(VIDEO_FOLDER) if f.lower().endswith(VIDEO_EXT)]
-print(f"\n🎥 Total Videos Found: {len(video_files)}\n")
 
-for vid_file in video_files:
+# ================= VIDEO =================
+video_files = [f for f in os.listdir(VIDEO_FOLDER)
+               if f.lower().endswith((".mp4", ".avi", ".mov"))]
 
-    try:
-        vid_path = os.path.join(VIDEO_FOLDER, vid_file)
-        print(f"➡️ Opening Video: {vid_file}")
+print(f"\n🎥 Total Videos Found: {len(video_files)}")
 
-        cap = cv2.VideoCapture(vid_path)
+for file in video_files:
 
-        if not cap.isOpened():
-            print(f"❌ Failed to open video: {vid_file}")
-            continue
+    path = os.path.join(VIDEO_FOLDER, file)
+    cap = cv2.VideoCapture(path)
 
-        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        fps = cap.get(cv2.CAP_PROP_FPS) or 25
+    if not cap.isOpened():
+        print(f"❌ Cannot open {file}")
+        continue
 
-        out = cv2.VideoWriter(
-            os.path.join(OUTPUT_FOLDER, f"vid_{vid_file}"),
-            cv2.VideoWriter_fourcc(*'mp4v'),
-            fps,
-            (width, height)
-        )
+    print(f"▶️ Processing Video: {file}")
 
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                break
+    fps = int(cap.get(cv2.CAP_PROP_FPS))
+    w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-            persons = person_detector.detect(frame)
+    output_path = os.path.join(OUTPUT_FOLDER, f"output_{file}")
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter(output_path, fourcc, fps, (w, h))
 
-            for person in persons:
-                x1, y1, x2, y2 = map(int, person["bbox"])
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
 
-                x1, y1 = max(0, x1), max(0, y1)
-                x2, y2 = min(frame.shape[1], x2), min(frame.shape[0], y2)
+        persons = person_detector.detect(frame)
 
-                crop = frame[y1:y2, x1:x2]
-                if crop.size == 0:
-                    continue
+        for p in persons:
+            x1, y1, x2, y2 = map(int, p["bbox"])
 
-                crop = cv2.resize(crop, (256, 256))
+            pad = 20
+            x1 = max(0, x1 - pad)
+            y1 = max(0, y1 - pad)
+            x2 = min(frame.shape[1], x2 + pad)
+            y2 = min(frame.shape[0], y2 + pad)
 
-                pose_detector = PoseDetector()
-                results = pose_detector.process(crop)
+            person_crop = frame[y1:y2, x1:x2]
 
-                posture = "UNKNOWN"
+            posture = "STANDING"
+
+            if person_crop.size != 0:
+                results = pose_detector.process(person_crop)
 
                 if results and results.pose_landmarks:
                     posture = detect_posture(
                         results.pose_landmarks,
-                        crop.shape[0],
-                        crop.shape[1]
+                        person_crop.shape[0],
+                        person_crop.shape[1]
                     )
 
-                    mp_draw.draw_landmarks(
-                        crop,
-                        results.pose_landmarks,
-                        pose_detector.mp_pose.POSE_CONNECTIONS
-                    )
+            color = (0, 255, 0) if posture == "STANDING" else (0, 0, 255)
 
-                crop_back = cv2.resize(crop, (x2 - x1, y2 - y1))
-                frame[y1:y2, x1:x2] = crop_back
+            cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
+            draw_label(frame, posture, x1, y1, color)
 
-                cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                cv2.putText(frame, posture, (x1, y1 - 10),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
+        out.write(frame)
+        cv2.imshow("Video Pose", frame)
 
-            out.write(frame)
+        key = cv2.waitKey(1)
 
-            if DEBUG:
-                cv2.imshow("Pose Video", frame)
-                if cv2.waitKey(1) == 27:
-                    break
+        # ESC → skip current video only
+        if key == 27:
+            break
 
-        cap.release()
-        out.release()
-        print(f"💾 Saved: vid_{vid_file}")
-
-    except Exception as e:
-        print(f"❌ Error processing video {vid_file}: {e}")
+    cap.release()
+    out.release()
 
 cv2.destroyAllWindows()
 
-print("\n🎯 All processing completed successfully!")
+print("\n✅ ALL FILES PROCESSED & SAVED\n")

@@ -1,61 +1,49 @@
 import mediapipe as mp
 import cv2
+import numpy as np
+
 
 class PoseDetector:
     def __init__(self):
-        self.mp_pose = mp.solutions.pose
+        self.pose = mp.solutions.pose.Pose(
+            static_image_mode=False,
+            model_complexity=1,
+            smooth_landmarks=True,
+            min_detection_confidence=0.5,
+            min_tracking_confidence=0.5
+        )
 
     def process(self, frame):
-        if frame is None or frame.size == 0:
+        try:
+            rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            return self.pose.process(rgb)
+        except:
             return None
 
-        rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-        # 🔥 FRESH MODEL EVERY CALL (CRITICAL FIX)
-        with self.mp_pose.Pose(
-            static_image_mode=True,
-            model_complexity=1,
-            enable_segmentation=False,
-            min_detection_confidence=0.5
-        ) as pose:
-
-            results = pose.process(rgb)
-
-        return results
-
-
-def detect_posture(landmarks, height, width):
-
-    if landmarks is None:
-        return "UNKNOWN"
-
+# ---------------- POSTURE DETECTION ----------------
+def detect_posture(landmarks, h, w):
     try:
-        nose = landmarks.landmark[0]
-        left_shoulder = landmarks.landmark[11]
-        right_shoulder = landmarks.landmark[12]
-        left_hip = landmarks.landmark[23]
-        right_hip = landmarks.landmark[24]
-        left_knee = landmarks.landmark[25]
-        right_knee = landmarks.landmark[26]
+        def pt(i):
+            lm = landmarks.landmark[i]
+            return np.array([lm.x * w, lm.y * h])
 
-        nose_y = nose.y * height
-        shoulder_y = ((left_shoulder.y + right_shoulder.y) / 2) * height
-        hip_y = ((left_hip.y + right_hip.y) / 2) * height
-        knee_y = ((left_knee.y + right_knee.y) / 2) * height
+        # Key points
+        shoulder = (pt(11) + pt(12)) / 2
+        hip = (pt(23) + pt(24)) / 2
 
-        if abs(shoulder_y - hip_y) < 40:
-            return "FALL"
+        # BODY ORIENTATION
+        vec = shoulder - hip
+        angle = np.degrees(np.arctan2(vec[1], vec[0]))
+        angle = abs(angle)
 
-        if shoulder_y < nose_y < hip_y:
-            return "BENDING"
+        vertical_angle = abs(90 - angle)
 
-        if abs(hip_y - knee_y) < 40:
-            return "SITTING"
+        # FALL vs STANDING
+        if vertical_angle > 45:
+            return "FALLEN"
 
-        if nose_y < shoulder_y < hip_y:
-            return "STANDING"
+        return "STANDING"
 
     except:
-        return "UNKNOWN"
-
-    return "UNKNOWN"
+        return "STANDING"

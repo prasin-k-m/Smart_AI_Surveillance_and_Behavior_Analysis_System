@@ -18,3 +18,9 @@ runs
 __init.py
 *pyc
 __pycache__
+
+Outputs/
+*.avi
+*.mp4
+*.pt
+*.pth
