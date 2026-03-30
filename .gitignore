@@ -1,26 +1,52 @@
-# enivironments
 
-env
-surveillance
+# Python General
 
-# Data set for custom model
+__pycache__/
 
-dataset
 
-# Training outputs
+# Virtual Environments
 
-runs
+env/
+surveillance/
 
-# delib
 
-*.whl
+# SQLite / Database
 
-__init.py
-*pyc
-__pycache__
+*.db
+
+
+# Model & Training Outputs
+
+runs/
+models/
+*.pt
+
+
+# Dataset - for custom model
+
+dataset/
+
+
+# Dataset - for testing outputs
+
+Sample_data/
+*.avi
+*.mp4
+*.jpg
+*.webp
+
+# Outputs (videos, Images, etc)
 
 Outputs/
 *.avi
 *.mp4
-*.pt
-*.pth
+*.jpg
+*.txt
+
+# Wheel files 
+
+*.whl
+
+
+
+
