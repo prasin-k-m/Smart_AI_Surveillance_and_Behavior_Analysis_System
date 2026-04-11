@@ -91,6 +91,7 @@ else:
 🧍 Posture: STANDING
 🔫 Armed: YES
 🕒 Time: 2026-03-04 12:31:22
+
 🚑 ALERT: MEDICAL
 👤 Person: Known
 🧍 Posture: FALLEN
