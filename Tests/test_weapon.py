@@ -2,7 +2,7 @@ import cv2
 import os
 from app.detection.yolo_weapon import WeaponDetector
 
-# ------------------ CONFIG ------------------
+# CONFIG 
 MODEL_PATH = "runs/detect/weapon_model/weights/best.pt"
 
 IMAGE_FOLDER = "Sample_data/Weapon/Images"
@@ -16,16 +16,16 @@ SKIP_FRAMES = 2
 MAX_WIDTH = 1200
 MAX_HEIGHT = 800
 
-# ------------------ SETUP ------------------
+#  SETUP 
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 detector = WeaponDetector(MODEL_PATH)
 
-# ------------------ HELPER FUNCTION ------------------
+# HELPER FUNCTION 
 def fit_to_screen(frame, max_w, max_h):
     h, w = frame.shape[:2]
 
-    # 🔥 ONLY shrink, NEVER enlarge
+    #  ONLY shrink, NEVER enlarge
     if w <= max_w and h <= max_h:
         return frame
 
@@ -36,8 +36,8 @@ def fit_to_screen(frame, max_w, max_h):
 
     return cv2.resize(frame, (new_w, new_h), interpolation=cv2.INTER_AREA)
 
-# ------------------ IMAGE TEST ------------------
-print("\n🖼️ Starting Image Testing...\n")
+#  IMAGE TEST
+print("\n Starting Image Testing...\n")
 
 for img_file in os.listdir(IMAGE_FOLDER):
     img_path = os.path.join(IMAGE_FOLDER, img_file)
@@ -59,7 +59,7 @@ for img_file in os.listdir(IMAGE_FOLDER):
     save_path = os.path.join(OUTPUT_FOLDER, f"img_{img_file}")
     cv2.imwrite(save_path, frame)
 
-    print(f"✅ Image processed: {img_file}")
+    print(f" Image processed: {img_file}")
 
     if DEBUG:
         display_frame = fit_to_screen(frame, MAX_WIDTH, MAX_HEIGHT)
@@ -72,8 +72,8 @@ for img_file in os.listdir(IMAGE_FOLDER):
 
 cv2.destroyAllWindows()
 
-# ------------------ VIDEO TEST ------------------
-print("\n🎥 Starting Video Testing...\n")
+# VIDEO TEST 
+print("\n Starting Video Testing...\n")
 
 for vid_file in os.listdir(VIDEO_FOLDER):
     vid_path = os.path.join(VIDEO_FOLDER, vid_file)
@@ -81,7 +81,7 @@ for vid_file in os.listdir(VIDEO_FOLDER):
     cap = cv2.VideoCapture(vid_path)
 
     if not cap.isOpened():
-        print("❌ Error opening video")
+        print(" Error opening video")
         continue
 
     fps = cap.get(cv2.CAP_PROP_FPS)
@@ -96,9 +96,9 @@ for vid_file in os.listdir(VIDEO_FOLDER):
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
 
-    print(f"🎥 Processing video: {vid_file}")
+    print(f" Processing video: {vid_file}")
 
-    # 🔥 IMPORTANT: auto-size window (no forced scaling)
+    # IMPORTANT: auto-size window (no forced scaling)
     cv2.namedWindow("Video Detection", cv2.WINDOW_AUTOSIZE)
 
     frame_count = 0
@@ -126,7 +126,7 @@ for vid_file in os.listdir(VIDEO_FOLDER):
         out.write(frame)
 
         if DEBUG:
-            # 🔥 FIX: only shrink if too big (no zoom)
+            # FIX: only shrink if too big (no zoom)
             display_frame = fit_to_screen(frame, MAX_WIDTH, MAX_HEIGHT)
 
             cv2.imshow("Video Detection", display_frame)
@@ -141,9 +141,10 @@ for vid_file in os.listdir(VIDEO_FOLDER):
     cap.release()
     out.release()
 
-    print(f"✅ Video saved: {vid_file}")
+    print(f" Video saved: {vid_file}")
 
 cv2.destroyAllWindows()
 
-print("\n✅ All processing completed successfully!")
+print("\nAll processing completed successfully!")
+
 #  python -m Tests.test_weapon

@@ -4,7 +4,7 @@ import os
 from app.detection.yolo_person import PersonDetector
 from app.pose.pose import PoseDetector, detect_posture
 
-# ---------------- CONFIG ----------------
+# CONFIG 
 PERSON_MODEL = "models/yolov8s.pt"
 
 IMAGE_FOLDER = "Sample_data/Pose/Images"
@@ -12,16 +12,16 @@ VIDEO_FOLDER = "Sample_data/Pose/Video"
 
 OUTPUT_FOLDER = "Outputs/pose_result"
 
-# ---------------- INIT ----------------
+# INIT 
 person_detector = PersonDetector(PERSON_MODEL)
 pose_detector = PoseDetector()
 
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-print("\n🚀 Running Pose Detection (MULTI FILE SUPPORT)\n")
+print("\n Running Pose Detection (MULTI FILE SUPPORT)\n")
 
 
-# ---------- DRAW LABEL ----------
+#  DRAW LABEL 
 def draw_label(frame, text, x1, y1, color):
     font = cv2.FONT_HERSHEY_SIMPLEX
     font_scale = 0.7
@@ -45,11 +45,11 @@ def draw_label(frame, text, x1, y1, color):
                 font, font_scale, (255, 255, 255), thickness)
 
 
-# ================= IMAGE =================
+#  IMAGE 
 image_files = [f for f in os.listdir(IMAGE_FOLDER)
                if f.lower().endswith((".jpg", ".jpeg", ".png"))]
 
-print(f"📸 Total Images Found: {len(image_files)}")
+print(f" Total Images Found: {len(image_files)}")
 
 for file in image_files:
 
@@ -59,7 +59,7 @@ for file in image_files:
     if frame is None:
         continue
 
-    print(f"🖼️ Processing Image: {file}")
+    print(f" Processing Image: {file}")
 
     persons = person_detector.detect(frame)
 
@@ -100,18 +100,17 @@ for file in image_files:
 
     key = cv2.waitKey(0)
 
-    # ESC → skip this image, continue next
     if key == 27:
         continue
 
 cv2.destroyAllWindows()
 
 
-# ================= VIDEO =================
+# VIDEO 
 video_files = [f for f in os.listdir(VIDEO_FOLDER)
                if f.lower().endswith((".mp4", ".avi", ".mov"))]
 
-print(f"\n🎥 Total Videos Found: {len(video_files)}")
+print(f"\n Total Videos Found: {len(video_files)}")
 
 for file in video_files:
 
@@ -119,10 +118,10 @@ for file in video_files:
     cap = cv2.VideoCapture(path)
 
     if not cap.isOpened():
-        print(f"❌ Cannot open {file}")
+        print(f" Cannot open {file}")
         continue
 
-    print(f"▶️ Processing Video: {file}")
+    print(f" Processing Video: {file}")
 
     fps = int(cap.get(cv2.CAP_PROP_FPS))
     w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -159,8 +158,7 @@ for file in video_files:
                     posture = detect_posture(
                         results.pose_landmarks,
                         person_crop.shape[0],
-                        person_crop.shape[1]
-                    )
+                        person_crop.shape[1])
 
             color = (0, 255, 0) if posture == "STANDING" else (0, 0, 255)
 
@@ -172,7 +170,7 @@ for file in video_files:
 
         key = cv2.waitKey(1)
 
-        # ESC → skip current video only
+        
         if key == 27:
             break
 
@@ -181,4 +179,4 @@ for file in video_files:
 
 cv2.destroyAllWindows()
 
-print("\n✅ ALL FILES PROCESSED & SAVED\n")
+print("\n ALL FILES PROCESSED & SAVED\n")
