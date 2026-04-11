@@ -13,8 +13,8 @@ from app.alert.telegram_alert import TelegramAlert
 
 # TELEGRAM CONFIG 
 
-BOT_TOKEN = "8690804121:AAFlu2nnCMzB9ENsGpovqfrVah-0NM--UMY"
-CHAT_ID = "C1889728180"
+BOT_TOKEN = "BOT TOCKEN"
+CHAT_ID = "CHAT ID"
 
 alert_system = TelegramAlert(BOT_TOKEN, CHAT_ID)
 
@@ -53,6 +53,7 @@ except:
 print(" All models loaded")
 
 # VIDEO / CAMERA 
+
 
 cap = cv2.VideoCapture(VIDEO_PATH)  
 # cap = cv2.VideoCapture(0)             
