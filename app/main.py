@@ -1,575 +1,44 @@
-# # # import cv2
-# # # import os
-# # # import sys
-
-# # # sys.excepthook = sys.__excepthook__
-
-# # # from app.detection.yolo_person import PersonDetector
-# # # from app.detection.yolo_weapon import WeaponDetector
-# # # from app.pose.pose import PoseDetector, detect_posture
-# # # from app.face.face_detector import FaceDetector
-# # # from app.face.face_recognizer import FaceRecognizer
-
-# # # # ---------------- CONFIG ----------------
-# # # PERSON_MODEL = "models/yolo/yolov8s.pt"
-# # # WEAPON_MODEL = "runs/detect/weapon_model/weights/best.pt"
-# # # FACE_MODEL = "models/yolo/yolov8n.pt"
-# # # FACE_DB = "known_faces"
-
-# # # VIDEO_PATH = "Sample_data/final_pipeline/Prediction.avi"
-
-# # # # ---------------- OUTPUT ----------------
-# # # OUTPUT_DIR = "Outputs/final result"
-# # # os.makedirs(OUTPUT_DIR, exist_ok=True)
-# # # OUTPUT_PATH = os.path.join(OUTPUT_DIR, "final_result.avi")
-
-# # # # ---------------- INIT ----------------
-# # # try:
-# # #     print("Loading PersonDetector...")
-# # #     person_detector = PersonDetector(PERSON_MODEL)
-
-# # #     print("Loading WeaponDetector...")
-# # #     weapon_detector = WeaponDetector(WEAPON_MODEL)
-
-# # #     print("Loading PoseDetector...")
-# # #     pose_detector = PoseDetector()
-
-# # #     print("Loading FaceDetector...")
-# # #     face_detector = FaceDetector(FACE_MODEL)
-
-# # #     print("Loading FaceRecognizer...")
-# # #     face_recognizer = FaceRecognizer(FACE_DB)
-
-# # #     print("✅ ALL MODELS LOADED")
-
-# # # except Exception as e:
-# # #     print("🔥 INIT ERROR:", e)
-# # #     exit()
-
-# # # # ---------------- VIDEO ----------------
-# # # cap = cv2.VideoCapture(VIDEO_PATH)
-
-# # # if not cap.isOpened():
-# # #     print("❌ ERROR: Cannot open video")
-# # #     exit()
-
-# # # fps = cap.get(cv2.CAP_PROP_FPS)
-# # # if fps == 0:
-# # #     fps = 25
-
-# # # width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-# # # height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-
-# # # print(f"🎥 FPS: {fps}, Width: {width}, Height: {height}")
-
-# # # fourcc = cv2.VideoWriter_fourcc(*"XVID")
-# # # out = cv2.VideoWriter(OUTPUT_PATH, fourcc, fps, (width, height))
-
-# # # # ---------------- HELPER ----------------
-# # # def is_inside(person_box, obj_box):
-# # #     px1, py1, px2, py2 = person_box
-# # #     ox1, oy1, ox2, oy2 = obj_box
-# # #     return (ox1 >= px1 and oy1 >= py1 and ox2 <= px2 and oy2 <= py2)
-
-# # # # ---------------- LOOP ----------------
-# # # frame_count = 0
-
-# # # while True:
-# # #     ret, frame = cap.read()
-
-# # #     if not ret:
-# # #         print("⚠️ No more frames OR video read failed")
-# # #         break
-
-# # #     frame_count += 1
-# # #     print(f"➡️ Processing frame {frame_count}")
-
-# # #     # 🔥 CRITICAL FIX: ensure frame valid
-# # #     if frame is None or frame.size == 0:
-# # #         print("❌ Empty frame")
-# # #         continue
-
-# # #     try:
-# # #         persons = person_detector.detect(frame)
-# # #         weapons = weapon_detector.detect(frame)
-# # #         faces = face_detector.detect(frame)
-# # #         pose_results = pose_detector.process(frame)
-# # #     except Exception as e:
-# # #         print("🔥 CRASH:", e)
-# # #         break
-
-# # #     # ---------------- POSE ----------------
-# # #     posture = "UNKNOWN"
-# # #     if pose_results and pose_results.pose_landmarks:
-# # #         posture = detect_posture(
-# # #             pose_results.pose_landmarks,
-# # #             frame.shape[0],
-# # #             frame.shape[1]
-# # #         )
-
-# # #     # ---------------- DRAW ----------------
-# # #     for person in persons:
-# # #         x1, y1, x2, y2 = map(int, person["bbox"])
-# # #         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-
-# # #     # ---------------- SAVE ----------------
-# # #     frame = cv2.resize(frame, (width, height))
-
-# # #     out.write(frame)
-
-# # #     # ---------------- DISPLAY ----------------
-# # #     cv2.imshow("SMART AI SURVEILLANCE", frame)
-
-# # #     if cv2.waitKey(1) == 27:
-# # #         break
-
-# # # print(f"✅ Total frames processed: {frame_count}")
-
-# # # # ---------------- CLEANUP ----------------
-# # # cap.release()
-# # # out.release()
-# # # cv2.destroyAllWindows()
-
-# # # print("✅ Video saved at:", OUTPUT_PATH)
-
-
-
-# # import cv2
-# # import os
-
-# # from app.detection.yolo_person import PersonDetector
-# # from app.detection.yolo_weapon import WeaponDetector
-# # from app.pose.pose import PoseDetector, detect_posture
-# # from app.face.face_detector import FaceDetector
-# # from app.face.face_recognizer import FaceRecognizer
-
-# # # ---------------- CONFIG ----------------
-# # PERSON_MODEL = "models/yolo/yolov8s.pt"
-# # WEAPON_MODEL = "runs/detect/weapon_model/weights/best.pt"
-# # FACE_MODEL = "models/yolo/yolov8n.pt"
-# # FACE_DB = "known_faces"
-
-# # VIDEO_PATH = "Sample_data/final_pipeline/Prediction.avi"
-
-# # # ---------------- OUTPUT ----------------
-# # OUTPUT_DIR = "Outputs/final result"
-# # os.makedirs(OUTPUT_DIR, exist_ok=True)
-# # OUTPUT_PATH = os.path.join(OUTPUT_DIR, "final_result.avi")
-
-# # # ---------------- INIT ----------------
-# # print("🚀 Initializing models...")
-
-# # person_detector = PersonDetector(PERSON_MODEL)
-# # weapon_detector = WeaponDetector(WEAPON_MODEL)
-# # pose_detector = PoseDetector()
-# # face_detector = FaceDetector(FACE_MODEL)
-
-# # # ✅ FIX: safe face recognizer
-# # try:
-# #     face_recognizer = FaceRecognizer(FACE_DB)
-# # except Exception as e:
-# #     print("⚠️ FaceRecognizer error:", e)
-# #     face_recognizer = None
-
-# # print("✅ All models loaded")
-
-# # # ---------------- VIDEO ----------------
-# # cap = cv2.VideoCapture(VIDEO_PATH)
-
-# # if not cap.isOpened():
-# #     print("❌ Cannot open video")
-# #     exit()
-
-# # fps = cap.get(cv2.CAP_PROP_FPS)
-# # if fps == 0:
-# #     fps = 25
-
-# # width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-# # height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-
-# # fourcc = cv2.VideoWriter_fourcc(*"XVID")
-# # out = cv2.VideoWriter(OUTPUT_PATH, fourcc, fps, (width, height))
-
-# # print("🎥 Processing video...")
-
-# # # ---------------- HELPER ----------------
-# # def is_inside(person_box, obj_box):
-# #     px1, py1, px2, py2 = person_box
-# #     ox1, oy1, ox2, oy2 = obj_box
-# #     return (ox1 >= px1 and oy1 >= py1 and ox2 <= px2 and oy2 <= py2)
-
-# # # ---------------- LOOP ----------------
-# # while True:
-# #     ret, frame = cap.read()
-
-# #     if not ret:
-# #         print("✅ Video finished")
-# #         break
-
-# #     persons = person_detector.detect(frame)
-# #     weapons = weapon_detector.detect(frame)
-# #     faces = face_detector.detect(frame)
-
-# #     pose_results = pose_detector.process(frame)
-# #     posture = "UNKNOWN"
-
-# #     if pose_results and pose_results.pose_landmarks:
-# #         posture = detect_posture(
-# #             pose_results.pose_landmarks,
-# #             frame.shape[0],
-# #             frame.shape[1]
-# #         )
-
-# #     # ---------------- FACE ----------------
-# #     face_names = []
-
-# #     if face_recognizer:
-# #         for (x1, y1, x2, y2) in faces:
-# #             h, w = frame.shape[:2]
-
-# #             x1, y1 = max(0, int(x1)), max(0, int(y1))
-# #             x2, y2 = min(w, int(x2)), min(h, int(y2))
-
-# #             face_crop = frame[y1:y2, x1:x2]
-
-# #             if face_crop.size == 0:
-# #                 continue
-
-# #             name = face_recognizer.recognize(face_crop)
-
-# #             face_names.append({
-# #                 "name": name,
-# #                 "bbox": [x1, y1, x2, y2]
-# #             })
-
-# #     # ---------------- ASSOCIATION ----------------
-# #     armed_flags = [False] * len(persons)
-# #     person_names = ["Unknown"] * len(persons)
-
-# #     for i, person in enumerate(persons):
-# #         px1, py1, px2, py2 = map(int, person["bbox"])
-
-# #         for weapon in weapons:
-# #             wx1, wy1, wx2, wy2 = map(int, weapon["bbox"])
-
-# #             if is_inside([px1, py1, px2, py2], [wx1, wy1, wx2, wy2]):
-# #                 armed_flags[i] = True
-
-# #     for i, person in enumerate(persons):
-# #         px1, py1, px2, py2 = map(int, person["bbox"])
-
-# #         for face in face_names:
-# #             fx1, fy1, fx2, fy2 = face["bbox"]
-
-# #             if fx1 >= px1 and fy1 >= py1 and fx2 <= px2 and fy2 <= py2:
-# #                 person_names[i] = face["name"]
-
-# #     # ---------------- DRAW ----------------
-# #     if len(persons) == 0:
-# #         cv2.putText(frame, "No Person Detected",
-# #                     (30, 100),
-# #                     cv2.FONT_HERSHEY_SIMPLEX,
-# #                     1, (0, 255, 255), 2)
-
-# #     for i, person in enumerate(persons):
-# #         x1, y1, x2, y2 = map(int, person["bbox"])
-
-# #         name = person_names[i]
-# #         status = "ARMED" if armed_flags[i] else "SAFE"
-
-# #         color = (0, 0, 255) if armed_flags[i] else (0, 255, 0)
-
-# #         label = f"{name} | {status} | {posture}"
-
-# #         cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
-# #         cv2.putText(frame, label,
-# #                     (x1, y1 - 10),
-# #                     cv2.FONT_HERSHEY_SIMPLEX,
-# #                     0.5, color, 2)
-
-# #     # ---------------- RISK ----------------
-# #     if any(armed_flags):
-# #         risk = "HIGH"
-# #     elif weapons:
-# #         risk = "MEDIUM"
-# #     elif posture == "FALLEN":
-# #         risk = "MEDICAL"
-# #     else:
-# #         risk = "LOW"
-
-# #     cv2.putText(frame, f"RISK: {risk}",
-# #                 (30, 50),
-# #                 cv2.FONT_HERSHEY_SIMPLEX,
-# #                 1, (0, 0, 255), 3)
-
-# #     # ---------------- SAVE ----------------
-# #     frame = cv2.resize(frame, (width, height))
-# #     out.write(frame)
-
-# #     # ---------------- DISPLAY ----------------
-# #     cv2.imshow("SMART AI SURVEILLANCE", frame)
-
-# #     if cv2.waitKey(1) == 27:
-# #         break
-
-# # # ---------------- CLEANUP ----------------
-# # cap.release()
-# # out.release()
-# # cv2.destroyAllWindows()
-
-# # print("✅ Output saved:", OUTPUT_PATH)
-
-
-
-
-
-# import cv2
-# import os
-
-# from app.detection.yolo_person import PersonDetector
-# from app.detection.yolo_weapon import WeaponDetector
-# from app.pose.pose import PoseDetector, detect_posture
-# from app.face.face_detector import FaceDetector
-# from app.face.face_recognizer import FaceRecognizer
-
-# # ---------------- CONFIG ----------------
-# PERSON_MODEL = "models/yolo/yolov8s.pt"
-# WEAPON_MODEL = "runs/detect/weapon_model/weights/best.pt"
-# FACE_MODEL = "models/yolo/yolov8n.pt"
-# FACE_DB = "known_faces"
-
-# VIDEO_PATH = "Sample_data/final_pipeline/Prediction.avi"
-
-# # ---------------- OUTPUT ----------------
-# OUTPUT_DIR = "Outputs/final result"
-# os.makedirs(OUTPUT_DIR, exist_ok=True)
-# OUTPUT_PATH = os.path.join(OUTPUT_DIR, "final_result.avi")
-
-# # ---------------- INIT ----------------
-# print("🚀 Initializing models...")
-
-# person_detector = PersonDetector(PERSON_MODEL)
-# weapon_detector = WeaponDetector(WEAPON_MODEL)
-# pose_detector = PoseDetector()
-# face_detector = FaceDetector(FACE_MODEL)
-
-# try:
-#     face_recognizer = FaceRecognizer(FACE_DB)
-# except:
-#     face_recognizer = None
-
-# print("✅ All models loaded")
-
-# # ---------------- VIDEO ----------------
-# cap = cv2.VideoCapture(VIDEO_PATH)
-
-# if not cap.isOpened():
-#     print("❌ Cannot open video")
-#     exit()
-
-# fps = cap.get(cv2.CAP_PROP_FPS)
-# if fps == 0:
-#     fps = 25
-
-# width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-# height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-
-# fourcc = cv2.VideoWriter_fourcc(*"XVID")
-# out = cv2.VideoWriter(OUTPUT_PATH, fourcc, fps, (width, height))
-
-# print("🎥 Processing video...")
-
-# # ---------------- HELPER ----------------
-# def is_inside(person_box, obj_box):
-#     px1, py1, px2, py2 = person_box
-#     ox1, oy1, ox2, oy2 = obj_box
-#     return (ox1 >= px1 and oy1 >= py1 and ox2 <= px2 and oy2 <= py2)
-
-# # 🔥 Weapon memory buffer
-# ARMED_BUFFER = 30
-# armed_memory = []
-
-# # ---------------- LOOP ----------------
-# while True:
-#     ret, frame = cap.read()
-
-#     if not ret:
-#         print("✅ Video finished")
-#         break
-
-#     persons = person_detector.detect(frame)
-#     weapons = weapon_detector.detect(frame)
-#     faces = face_detector.detect(frame)
-
-#     # Ensure memory size
-#     if len(armed_memory) != len(persons):
-#         armed_memory = [0] * len(persons)
-
-#     # ---------------- POSE ----------------
-#     pose_results = pose_detector.process(frame)
-#     posture = "UNKNOWN"
-
-#     if pose_results and pose_results.pose_landmarks:
-#         posture = detect_posture(
-#             pose_results.pose_landmarks,
-#             frame.shape[0],
-#             frame.shape[1]
-#         )
-
-#     # ---------------- FACE ----------------
-#     face_names = []
-
-#     if face_recognizer:
-#         for (x1, y1, x2, y2) in faces:
-#             h, w = frame.shape[:2]
-
-#             x1, y1 = max(0, int(x1)), max(0, int(y1))
-#             x2, y2 = min(w, int(x2)), min(h, int(y2))
-
-#             face_crop = frame[y1:y2, x1:x2]
-
-#             if face_crop.size == 0:
-#                 continue
-
-#             name = face_recognizer.recognize(face_crop)
-
-#             face_names.append({
-#                 "name": name,
-#                 "bbox": [x1, y1, x2, y2]
-#             })
-
-#     # ---------------- ASSOCIATION ----------------
-#     armed_flags = [False] * len(persons)
-#     person_names = ["Unknown"] * len(persons)
-
-#     # 🔥 WEAPON MEMORY LOGIC
-#     for i, person in enumerate(persons):
-#         px1, py1, px2, py2 = map(int, person["bbox"])
-
-#         detected_weapon = False
-
-#         for weapon in weapons:
-#             wx1, wy1, wx2, wy2 = map(int, weapon["bbox"])
-
-#             if is_inside([px1, py1, px2, py2], [wx1, wy1, wx2, wy2]):
-#                 detected_weapon = True
-#                 break
-
-#         if detected_weapon:
-#             armed_memory[i] = ARMED_BUFFER
-#         else:
-#             armed_memory[i] = max(0, armed_memory[i] - 1)
-
-#         armed_flags[i] = armed_memory[i] > 0
-
-#     # Face → person
-#     for i, person in enumerate(persons):
-#         px1, py1, px2, py2 = map(int, person["bbox"])
-
-#         for face in face_names:
-#             fx1, fy1, fx2, fy2 = face["bbox"]
-
-#             if fx1 >= px1 and fy1 >= py1 and fx2 <= px2 and fy2 <= py2:
-#                 person_names[i] = face["name"]
-
-#     # ---------------- DRAW ----------------
-#     h, w = frame.shape[:2]
-
-#     if len(persons) == 0:
-#         cv2.putText(frame, "No Person Detected",
-#                     (30, 100),
-#                     cv2.FONT_HERSHEY_SIMPLEX,
-#                     1, (0, 255, 255), 2)
-
-#     for i, person in enumerate(persons):
-#         x1, y1, x2, y2 = map(int, person["bbox"])
-
-#         name = person_names[i]
-#         status = "ARMED" if armed_flags[i] else "SAFE"
-
-#         color = (0, 0, 255) if armed_flags[i] else (0, 255, 0)
-
-#         label = f"{name} | {status} | {posture}"
-
-#         # 🔥 FIX: keep label inside frame
-#         text_x = max(0, min(x1, w - 200))
-#         text_y = max(20, y1 - 10)
-
-#         cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
-#         cv2.putText(frame, label,
-#                     (text_x, text_y),
-#                     cv2.FONT_HERSHEY_SIMPLEX,
-#                     0.5, color, 2)
-
-#     # Draw weapons
-#     for weapon in weapons:
-#         x1, y1, x2, y2 = map(int, weapon["bbox"])
-#         cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
-
-#     # ---------------- RISK ----------------
-#     if any(armed_flags):
-#         risk = "HIGH"
-#     elif weapons:
-#         risk = "MEDIUM"
-#     elif posture == "FALLEN":
-#         risk = "MEDICAL"
-#     else:
-#         risk = "LOW"
-
-#     cv2.putText(frame, f"RISK: {risk}",
-#                 (30, 50),
-#                 cv2.FONT_HERSHEY_SIMPLEX,
-#                 1, (0, 0, 255), 3)
-
-#     # ---------------- SAVE ----------------
-#     frame = cv2.resize(frame, (width, height))
-#     out.write(frame)
-
-#     # ---------------- DISPLAY ----------------
-#     cv2.imshow("SMART AI SURVEILLANCE", frame)
-
-#     if cv2.waitKey(1) == 27:
-#         break
-
-# # ---------------- CLEANUP ----------------
-# cap.release()
-# out.release()
-# cv2.destroyAllWindows()
-
-# print("✅ Output saved:", OUTPUT_PATH)
-
-
-
-
-
-
-
-
 
 import cv2
 import os
+from datetime import datetime
 
 from app.detection.yolo_person import PersonDetector
 from app.detection.yolo_weapon import WeaponDetector
 from app.pose.pose import PoseDetector, detect_posture
 from app.face.face_detector import FaceDetector
 from app.face.face_recognizer import FaceRecognizer
+from app.database.db import insert_event
+from app.alert.telegram_alert import TelegramAlert
 
-# ---------------- CONFIG ----------------
-PERSON_MODEL = "models/yolo/yolov8s.pt"
+# TELEGRAM CONFIG 
+
+BOT_TOKEN = "8690804121:AAFlu2nnCMzB9ENsGpovqfrVah-0NM--UMY"
+CHAT_ID = "C1889728180"
+
+alert_system = TelegramAlert(BOT_TOKEN, CHAT_ID)
+
+print(" Testing Telegram...")
+alert_system.send("Telegram connected!")
+
+# CONFIG 
+
+PERSON_MODEL = "models/yolov8s.pt"
 WEAPON_MODEL = "runs/detect/weapon_model/weights/best.pt"
-FACE_MODEL = "models/yolo/yolov8n.pt"
+FACE_MODEL = "models/yolov8n-face.pt"
 FACE_DB = "known_faces"
 
 VIDEO_PATH = "Sample_data/final_pipeline/Prediction.avi"
 
-# ---------------- OUTPUT ----------------
-OUTPUT_DIR = "Outputs/final result"
+# OUTPUT 
+OUTPUT_DIR = "Outputs/final_result"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
-OUTPUT_PATH = os.path.join(OUTPUT_DIR, "final_result.avi")
 
-# ---------------- INIT ----------------
-print("🚀 Initializing models...")
+OUTPUT_PATH = os.path.join(OUTPUT_DIR, "db_video_result.avi")
+
+# INIT
+
+print("Initializing models...")
 
 person_detector = PersonDetector(PERSON_MODEL)
 weapon_detector = WeaponDetector(WEAPON_MODEL)
@@ -581,34 +50,40 @@ try:
 except:
     face_recognizer = None
 
-print("✅ All models loaded")
+print(" All models loaded")
 
-# ---------------- VIDEO ----------------
-cap = cv2.VideoCapture(VIDEO_PATH)
+# VIDEO / CAMERA 
+
+cap = cv2.VideoCapture(VIDEO_PATH)  
+# cap = cv2.VideoCapture(0)             
 
 if not cap.isOpened():
-    print("❌ Cannot open video")
+    print("Cannot open source")
     exit()
-
-fps = cap.get(cv2.CAP_PROP_FPS)
-if fps == 0:
-    fps = 25
 
 width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-fourcc = cv2.VideoWriter_fourcc(*"XVID")
-out = cv2.VideoWriter(OUTPUT_PATH, fourcc, fps, (width, height))
+# FINAL SPEED FIX 
 
-print("🎥 Processing video...")
+fps = 5  
 
-# ---------------- HELPER ----------------
+out = cv2.VideoWriter(
+    OUTPUT_PATH,
+    cv2.VideoWriter_fourcc(*"XVID"),
+    fps,
+    (width, height)
+)
+
+print(" Processing...")
+
+# HELPERS 
+
 def is_inside(person_box, obj_box):
     px1, py1, px2, py2 = person_box
     ox1, oy1, ox2, oy2 = obj_box
     return (ox1 >= px1 and oy1 >= py1 and ox2 <= px2 and oy2 <= py2)
 
-# 🔥 IoU function
 def iou(boxA, boxB):
     xA = max(boxA[0], boxB[0])
     yA = max(boxA[1], boxB[1])
@@ -616,61 +91,55 @@ def iou(boxA, boxB):
     yB = min(boxA[3], boxB[3])
 
     inter = max(0, xB - xA) * max(0, yB - yA)
-
     areaA = (boxA[2]-boxA[0]) * (boxA[3]-boxA[1])
     areaB = (boxB[2]-boxB[0]) * (boxB[3]-boxB[1])
 
     return inter / (areaA + areaB - inter + 1e-6)
 
-# 🔥 Weapon memory (IoU-based)
+# MEMORY 
+
 ARMED_BUFFER = 100
 armed_memory = {}
+last_state = {}
+alert_global_sent = False
 
-# ---------------- LOOP ----------------
+# LOOP 
+
 while True:
     ret, frame = cap.read()
-
     if not ret:
-        print("✅ Video finished")
         break
 
     persons = person_detector.detect(frame)
     weapons = weapon_detector.detect(frame)
     faces = face_detector.detect(frame)
 
-    # ---------------- POSE ----------------
+    # POSE
+
     pose_results = pose_detector.process(frame)
     posture = "UNKNOWN"
 
     if pose_results and pose_results.pose_landmarks:
-        posture = detect_posture(
-            pose_results.pose_landmarks,
-            frame.shape[0],
-            frame.shape[1]
-        )
+        posture = detect_posture(   pose_results.pose_landmarks,
+                                    frame.shape[0],
+                                    frame.shape[1] )
 
-    # ---------------- FACE ----------------
+    # FACE 
+
     face_names = []
-
     if face_recognizer:
         for (x1, y1, x2, y2) in faces:
-            h, w = frame.shape[:2]
             x1, y1 = max(0, int(x1)), max(0, int(y1))
-            x2, y2 = min(w, int(x2)), min(h, int(y2))
+            x2, y2 = min(frame.shape[1], int(x2)), min(frame.shape[0], int(y2))
 
             face_crop = frame[y1:y2, x1:x2]
-
             if face_crop.size == 0:
                 continue
 
             name = face_recognizer.recognize(face_crop)
+            face_names.append({"name": name, "bbox": [x1, y1, x2, y2]})
 
-            face_names.append({
-                "name": name,
-                "bbox": [x1, y1, x2, y2]
-            })
-
-    # ---------------- WEAPON MEMORY (IoU MATCHING) ----------------
+    #  WEAPON MEMORY 
     new_memory = {}
 
     for person in persons:
@@ -678,16 +147,14 @@ while True:
         current_box = [px1, py1, px2, py2]
 
         matched_key = None
-
         for old_box in armed_memory:
-            if iou(current_box, list(old_box)) > 0.5:
+            if iou(current_box, list(old_box)) > 0.5:             
                 matched_key = old_box
                 break
 
         detected_weapon = any(
-            is_inside(current_box, list(map(int, w["bbox"])))
-            for w in weapons
-        )
+            is_inside(current_box, list(map(int, w["bbox"])))      
+            for w in weapons)
 
         if detected_weapon:
             new_memory[tuple(current_box)] = ARMED_BUFFER
@@ -698,7 +165,7 @@ while True:
 
     armed_memory = new_memory
 
-    # ---------------- FLAGS ----------------
+    # FLAGS - Decision
     armed_flags = []
     person_names = ["Unknown"] * len(persons)
 
@@ -706,77 +173,99 @@ while True:
         box = tuple(map(int, person["bbox"]))
         armed_flags.append(armed_memory.get(box, 0) > 0)
 
-    # ---------------- FACE → PERSON ----------------
-    for i, person in enumerate(persons):
+    # FACE MATCH
+    for i, person in enumerate(persons):                                           
         px1, py1, px2, py2 = map(int, person["bbox"])
-
         for face in face_names:
             fx1, fy1, fx2, fy2 = face["bbox"]
-
             if fx1 >= px1 and fy1 >= py1 and fx2 <= px2 and fy2 <= py2:
                 person_names[i] = face["name"]
 
-    # ---------------- DRAW ----------------
-    h, w = frame.shape[:2]
+    # RISK ENGINE 
+    if any(armed_flags):
+        risk = "HIGH"
+    elif posture == "FALLEN":
+        risk = "MEDICAL"
+    else:
+        risk = "LOW"
 
-    if len(persons) == 0:
-        cv2.putText(frame, "No Person Detected",
-                    (30, 100),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    1, (0, 255, 255), 2)
-
+    # DRAW PERSONS 
     for i, person in enumerate(persons):
         x1, y1, x2, y2 = map(int, person["bbox"])
-
         name = person_names[i]
         status = "ARMED" if armed_flags[i] else "SAFE"
 
         color = (0, 0, 255) if armed_flags[i] else (0, 255, 0)
         label = f"{name} | {status} | {posture}"
 
-        # 🔥 Keep text inside frame
-        text_x = max(0, min(x1, w - 200))
-        text_y = max(20, y1 - 10)
-
         cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
         cv2.putText(frame, label,
-                    (text_x, text_y),
+                    (x1, max(20, y1 - 10)),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.5, color, 2)
 
-    # Draw weapons
+    # DRAW WEAPONS 
     for weapon in weapons:
-        x1, y1, x2, y2 = map(int, weapon["bbox"])
-        cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
+        wx1, wy1, wx2, wy2 = map(int, weapon["bbox"])
+        cv2.rectangle(frame, (wx1, wy1), (wx2, wy2), (255, 0, 0), 2)
 
-    # ---------------- RISK ----------------
-    if any(armed_flags):
-        risk = "HIGH"
-    elif weapons:
-        risk = "MEDIUM"
-    elif posture == "FALLEN":
-        risk = "MEDICAL"
+    # RISK DISPLAY 
+    if risk == "HIGH":
+        risk_color = (0, 0, 255)
+    elif risk == "MEDICAL":
+        risk_color = (0, 165, 255)
     else:
-        risk = "LOW"
+        risk_color = (0, 255, 0)
 
-    cv2.putText(frame, f"RISK: {risk}",
-                (30, 50),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                1, (0, 0, 255), 3)
+    text = f"RISK: {risk}"
+    x, y = 20, height - 20
 
-    # ---------------- SAVE ----------------
-    frame = cv2.resize(frame, (width, height))
+    (tw, th), _ = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 1.2, 3)
+
+    cv2.rectangle(frame, (x-10, y-th-10), (x+tw+10, y+10), (0,0,0), -1)
+    cv2.putText(frame, text, (x, y),
+                cv2.FONT_HERSHEY_SIMPLEX, 1.2, risk_color, 3)
+
+    # DB + ALERT
+
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    for i, person in enumerate(persons):
+        name = person_names[i]
+        status = "ARMED" if armed_flags[i] else "SAFE"
+
+        key = name if name != "Unknown" else f"person_{i}"
+        current_state = (status, posture, risk)
+
+        if key not in last_state or last_state[key] != current_state:
+            if risk != "LOW":
+                insert_event(timestamp, name, status, posture, risk)
+
+                if status == "ARMED" and not alert_global_sent:
+                    alert_global_sent = True
+
+                    frame_path = os.path.join(OUTPUT_DIR, "alert.jpg")
+                    cv2.imwrite(frame_path, frame)
+
+                    message = f"ARMED PERSON\n{name} | {timestamp} | {risk}"
+                    alert_system.send(message, image_path=frame_path)
+
+            last_state[key] = current_state
+
+    
     out.write(frame)
 
-    # ---------------- DISPLAY ----------------
     cv2.imshow("SMART AI SURVEILLANCE", frame)
 
     if cv2.waitKey(1) == 27:
         break
 
-# ---------------- CLEANUP ----------------
+
 cap.release()
 out.release()
 cv2.destroyAllWindows()
 
-print("✅ Output saved:", OUTPUT_PATH)
+
+
+# python -m app.main
+#  streamlit run app/dashboard.py
