@@ -111,6 +111,7 @@ streamlit run dashboard/app.py
 ```
 
 ## 📁 Project Structure
+```
 Smart_AI_Surveillance_System/
 │
 ├── app/
@@ -138,7 +139,7 @@ Smart_AI_Surveillance_System/
 ├── weapon.yaml
 ├── reqiurment.txt
 └── README.md
-
+```
 ## ⚙️ Prerequisites
 
 - Python 3.9
