@@ -1,7 +1,6 @@
 # 🚀 SmartEye: AI Surveillance & Behavior Analysis System
 
-![Python](https://img.shields.io/badge/Python-3.9-blue) ![YOLOv8](https://img.shields.io/badge/YOLOv8n-Ultralytics-red) ![Streamlit](https://img.shields.io/badge/Dashboard-Streamlit-orange) ![License](https://img.shields.io/badge/License-MIT-green) ![Status](https://img.shields.io/badge/Status-Active%20Development-yellow)
-
+![Python](https://img.shields.io/badge/Python-3.9-blue) ![YOLOv8](https://img.shields.io/badge/YOLOv8n-Ultralytics-red) ![Streamlit](https://img.shields.io/badge/Dashboard-Streamlit-orange) ![License](https://img.shields.io/badge/License-Pending-yellow) ![Status](https://img.shields.io/badge/Status-Completed-brightgreen) ![Contributions](https://img.shields.io/badge/Contributions-Welcome-orange)
 ## 📌 Overview
 
 SmartEye is an AI-powered intelligent surveillance system designed to detect threats, analyze human behavior, identify individuals, and generate real-time alerts. This project represents my journey into building a complete end-to-end AI system, integrating multiple AI components into a real-time decision-making pipeline.
