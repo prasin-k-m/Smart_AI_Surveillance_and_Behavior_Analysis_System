@@ -175,10 +175,10 @@ CAMERA_INDEX=0
 ```
 
 Add known face images to `known_faces/`:
-known_faces/
+```known_faces/
 ├── your_name.jpg
 └── another_person.jpg
-
+```
 ## ▶️ Run the System
 
 Using webcam:
